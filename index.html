@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+uniform vec3 theta;
+
+void
+main()
+{
+    vec3 angles = radians( theta );
+    vec3 c = cos( angles );
+    vec3 s = sin( angles );
+
+    mat4 rx = mat4( 1.0,  0.0,  0.0, 0.0,
+		    0.0,  c.x,  s.x, 0.0,
+		    0.0, -s.x,  c.x, 0.0,
+		    0.0,  0.0,  0.0, 1.0 );
+
+    mat4 ry = mat4( c.y, 0.0, -s.y, 0.0,
+		    0.0, 1.0,  0.0, 0.0,
+		    s.y, 0.0,  c.y, 0.0,
+		    0.0, 0.0,  0.0, 1.0 );
+
+
+    mat4 rz = mat4( c.z, s.z, 0.0, 0.0,
+		    -s.z,  c.z, 0.0, 0.0,
+		    0.0,  0.0, 1.0, 0.0,
+		    0.0,  0.0, 0.0, 1.0 );
+
+    gl_Position = rz * ry * rx * vPosition;
+    gl_Position.z = -gl_Position.z;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+
+void
+main()
+{
+    gl_FragColor = vec4( 0.0, 0.0, 0.0, 1.0 ); 
+}
+</script>
+
+    <script type="text/javascript" src="/Common/webgl-utils.js"></script>
+    <script type="text/javascript" src="/Common/initShaders.js"></script>
+    <script type="text/javascript" src="/Common/MV.js"></script>
+    <script type="text/javascript" src="termProject.js"></script>
+
+<style type="text/css">
+    .container {
+        position: relative;
+        width: 550px;
+        font-family: monospace;
+        left: 32%;
+    }
+
+    #overlay {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        font-family: 'Courier New', Courier, monospace;
+    }
+</style>
+    
+</head>
+
+<body>
+    <div class="container">
+        <div id="overlay">
+            <!-- show current language and angle -->
+            <div>Language: <span id="currentLanguage"></span></div>
+            <div>Branch Angle: <span id="currentAngle"></span></div>
+        </div>
+            <canvas id="gl-canvas" width="512" height="512">
+                Oops ... your browser doesn't support the HTML5 canvas element
+            </canvas>
+            <div>
+                <!-- description of what each part of language does so user can
+                input their own variation -->
+                <p>
+                    Language: <br />
+                    &emsp; F = move forward<br />
+                    &emsp; + = theta + branch angle<br />
+                    &emsp; - = theta - branch angle<br />
+                    &emsp; * = phi + branch angle<br />
+                    &emsp; & = phi - branch angle<br />
+                    &emsp; [ = save current position<br />
+                    &emsp; ] = move back to saved position<br />
+                </p>
+            </div>
+            <div>
+                Language: <input id="languageInput" type="text" value=""> <button id="tryInput">Construct Tree</button>
+            </div>
+            <div>
+                <button id="toggleRotation">Toggle Rotation</button>
+            </div>
+            <div>
+                Recursive Steps: 0<input id="iterationSlider" type="range" min="0" max="5" step="1" value="0">5
+            </div>
+
+            <div>
+                Branch Angle: 15 deg<input id="branchAngleSlider" type="range" min="15" max="145" step="1" value="45">145 deg
+            </div>
+    </div>
+    
+</body>
+
+</html>
