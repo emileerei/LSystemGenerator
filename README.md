@@ -1,2 +1,2 @@
 # LSystemGenerator
-Computer Graphics Term Project
+Computer Graphics 2018 Term Project
